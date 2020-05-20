@@ -70,3 +70,20 @@ dat<- redcap_read(
 )$data
 head(dat)
 ```
+```{r variable selection, include=FALSE}
+# recode encounter type
+dat.f=dat %>%
+    #use mutate(new column = recode(current column to be recoded, "variable in column"="new variable name"))
+    mutate(beachphone_hear_about_us_new = recode(beachphone_hear_about_us, "1"="Flyer","3"="Facebook","5"="Other"))%>%
+    replace_na(list( beachphone_hear_about_us_new = "Didn't Respond"))%>%
+    mutate(beachphone_pass_fail_new = recode(beachphone_pass_fail, "1"="pass","0"="fail"))%>%
+    mutate(beach_consent_date1_new = recode(beach_consent_date1, "1"="Consented","0"="not Consented"))
+```
+
+```{r variable selection, include=FALSE}
+Age <- ds_some_rows_v1%>%
+    filter(!is.na(analysis_mat_age))
+
+BMI <- ds_some_rows_v1%>%
+    filter(!is.na(analysis_bmi))
+```
