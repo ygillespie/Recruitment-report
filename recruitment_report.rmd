@@ -31,8 +31,8 @@ desired_fields=c("test_id","redcap_event_name",
                  "beach_part_drop_out",
                  "beachphone_age",
                  "beachphone_prepreg_bmi",
-                 "beachphone_hear_about_us",
-                 "beach_consent_date1",
+                 "beach_learn_about_study",
+                 "beach_part_consent",
                  "beach_study_complete")
 # participants
 participant.records.v1=c("BLS001A",
@@ -70,20 +70,14 @@ dat<- redcap_read(
 )$data
 head(dat)
 ```
+
 ```{r variable selection, include=FALSE}
 # recode encounter type
 dat.f=dat %>%
     #use mutate(new column = recode(current column to be recoded, "variable in column"="new variable name"))
-    mutate(beachphone_hear_about_us_new = recode(beachphone_hear_about_us, "1"="Flyer","3"="Facebook","5"="Other"))%>%
-    replace_na(list( beachphone_hear_about_us_new = "Didn't Respond"))%>%
-    mutate(beachphone_pass_fail_new = recode(beachphone_pass_fail, "1"="pass","0"="fail"))%>%
+    mutate(learn_about_study = recode(beach_learn_about_study, "1"="Flyer","3"="Facebook","5"="Other"))%>%
+    replace_na(list( learn_about_study = "Didn't Respond"))%>%
+    mutate(complete_study = recode(beach_study_complete, "1"="completed","0"="not completed"))%>%
+    mutate(dropped_study = recode(beach_part_drop_out, "1"="dropped","0"="current participant"))%>%
     mutate(beach_consent_date1_new = recode(beach_consent_date1, "1"="Consented","0"="not Consented"))
-```
-
-```{r variable selection, include=FALSE}
-Age <- ds_some_rows_v1%>%
-    filter(!is.na(analysis_mat_age))
-
-BMI <- ds_some_rows_v1%>%
-    filter(!is.na(analysis_bmi))
 ```
